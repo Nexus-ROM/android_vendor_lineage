@@ -331,3 +331,6 @@ DISABLE_DEXPREOPT_CHECK := true
 
 PRODUCT_PACKAGES += \
     com.google.android.permission
+
+# Fonts
+include vendor/lineage/config/fonts.mk
