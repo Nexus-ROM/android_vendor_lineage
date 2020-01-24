@@ -159,7 +159,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     vendor/lineage/prebuilt/common/etc/init/init.lineage-updater.rc:$(TARGET_COPY_OUT_SYSTEM_EXT)/etc/init/init.lineage-updater.rc
 
-
 # Bootanimation
 ifeq ($(strip $(TARGET_SCREEN_WIDTH)),)
     $(warning "TARGET_SCREEN_WIDTH is undefined, assuming 1080p")
@@ -169,6 +168,12 @@ endif
 
 PRODUCT_PACKAGES += \
     bootanimation_pixel
+
+# Charger
+PRODUCT_PACKAGES += \
+    charger_res_images \
+    product_charger_res_images \
+    product_charger_res_images_vendor
 
 # Config
 PRODUCT_PACKAGES += \
