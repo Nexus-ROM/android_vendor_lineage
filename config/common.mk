@@ -305,6 +305,9 @@ PRODUCT_PRODUCT_PROPERTIES += \
     debug.sf.enable_transaction_tracing=false
 endif
 
+# Flatten APEXs for performance
+OVERRIDE_TARGET_FLATTEN_APEX := true
+
 # Audio files
 $(call inherit-product, vendor/lineage/audio/audio.mk)
 
