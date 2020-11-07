@@ -29,6 +29,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
 endif
 endif
 
+# Disable RescueParty due to high risk of data loss
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.sys.disable_rescue=true
+
 ifeq ($(TARGET_BUILD_VARIANT),eng)
 # Disable ADB authentication
 PRODUCT_SYSTEM_EXT_PROPERTIES += ro.adb.secure=0
