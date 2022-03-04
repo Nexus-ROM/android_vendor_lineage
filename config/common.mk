@@ -305,11 +305,13 @@ PRODUCT_PRODUCT_PROPERTIES += \
     debug.sf.enable_transaction_tracing=false
 endif
 
+ifneq ($(wildcard vendor/google/modules/.),)
 # Flatten APEXs for performance
 OVERRIDE_TARGET_FLATTEN_APEX := true
 # This needs to be specified explicitly to override ro.apex.updatable=true from
 # # prebuilt vendors, as init reads /product/build.prop after /vendor/build.prop
 PRODUCT_PRODUCT_PROPERTIES += ro.apex.updatable=false
+endif
 
 # Audio files
 $(call inherit-product, vendor/lineage/audio/audio.mk)
