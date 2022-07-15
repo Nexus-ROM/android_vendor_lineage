@@ -305,6 +305,10 @@ PRODUCT_PRODUCT_PROPERTIES += \
     debug.sf.enable_transaction_tracing=false
 endif
 
+# Disable async MTE on system_server
+PRODUCT_SYSTEM_EXT_PROPERTIES += \
+    arm64.memtag.process.system_server=off
+
 ifneq ($(wildcard vendor/google/modules/.),)
 # Flatten APEXs for performance
 OVERRIDE_TARGET_FLATTEN_APEX := true
