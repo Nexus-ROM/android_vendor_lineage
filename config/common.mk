@@ -12,6 +12,8 @@ $(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
 $(call inherit-product, vendor/pixel/sounds/products/sounds.mk)
 $(call inherit-product, vendor/pixel/gsans/products/gsans.mk)
 
+DONT_DEXPREOPT_PREBUILTS := true
+
 PRODUCT_BRAND ?= Nexus
 
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
