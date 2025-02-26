@@ -134,6 +134,14 @@ ifeq ($(TARGET_BUILD_VARIANT), user)
     PRODUCT_ART_TARGET_INCLUDE_DEBUG_BUILD := false
 endif
 
+ART_BUILD_TARGET_NDEBUG := false
+ART_BUILD_TARGET_DEBUG := false
+ART_BUILD_HOST_NDEBUG := false
+ART_BUILD_HOST_DEBUG := false
+
+# Disable dex2oat debug
+USE_DEX2OAT_DEBUG := false
+
 # Strip the local variable table and the local variable type table to reduce
 # the size of the system image. This has no bearing on stack traces, but will
 # leave less information available via JDWP.
