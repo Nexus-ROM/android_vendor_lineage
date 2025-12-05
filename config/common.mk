@@ -12,7 +12,7 @@ $(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
 $(call inherit-product, vendor/pixel/sounds/products/sounds.mk)
 $(call inherit-product, vendor/pixel/gsans/products/gsans.mk)
 
-PRODUCT_BRAND ?= LineageOS
+PRODUCT_BRAND ?= Nexus
 
 ifeq ($(PRODUCT_GMS_CLIENTID_BASE),)
 PRODUCT_PRODUCT_PROPERTIES += \
