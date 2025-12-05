@@ -6,6 +6,11 @@ $(call inherit-product-if-exists, vendor/extra/product.mk)
 
 # GMS
 $(call inherit-product-if-exists, vendor/pixel/gms/products/gms.mk)
+$(call inherit-product, vendor/pixel/launcher/products/launcher.mk)
+$(call inherit-product, vendor/pixel/themepicker/products/themepicker.mk)
+$(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
+$(call inherit-product, vendor/pixel/sounds/products/sounds.mk)
+$(call inherit-product, vendor/pixel/gsans/products/gsans.mk)
 
 PRODUCT_BRAND ?= LineageOS
 
@@ -262,7 +267,6 @@ $(call inherit-product, vendor/lineage/audio/audio.mk)
 
 # SetupWizard
 PRODUCT_PRODUCT_PROPERTIES += \
-    setupwizard.theme=glif_v4 \
     setupwizard.feature.day_night_mode_enabled=true
 
 PRODUCT_ENFORCE_RRO_EXCLUDED_OVERLAYS += vendor/lineage/overlay/no-rro
