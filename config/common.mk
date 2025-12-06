@@ -5,7 +5,7 @@ $(call inherit-product-if-exists, vendor/extra/product.mk)
 -include $(sort $(wildcard vendor/*/*/exclude-bp.mk))
 
 # GMS
-$(call inherit-product-if-exists, vendor/pixel/gms/products/gms.mk)
+$(call inherit-product, vendor/pixel/gms/products/gms.mk)
 $(call inherit-product, vendor/pixel/launcher/products/launcher.mk)
 $(call inherit-product, vendor/pixel/themepicker/products/themepicker.mk)
 $(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
