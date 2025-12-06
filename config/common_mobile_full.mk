@@ -12,9 +12,7 @@ PRODUCT_PACKAGES += \
     Camelot \
     Etar \
     Profiles \
-    Recorder \
     Seedvault \
-    Twelve
 
 ifneq ($(PRODUCT_NO_CAMERA),true)
 PRODUCT_PACKAGES += \
