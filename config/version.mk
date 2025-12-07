@@ -7,29 +7,28 @@ else
     LINEAGE_BUILD_DATE := $(shell date -u +%Y%m%d)
 endif
 
-# Set LINEAGE_BUILDTYPE from the env RELEASE_TYPE, for jenkins compat
+# Default to UNOFFICIAL
+LINEAGE_BUILDTYPE := UNOFFICIAL
 
-ifndef LINEAGE_BUILDTYPE
-    ifdef RELEASE_TYPE
-        # Starting with "LINEAGE_" is optional
-        RELEASE_TYPE := $(shell echo $(RELEASE_TYPE) | sed -e 's|^LINEAGE_||g')
-        LINEAGE_BUILDTYPE := $(RELEASE_TYPE)
+# Check for Nexus official builds
+DEVICE_NEXUS_OVERLAY := $(wildcard device/*/$(LINEAGE_BUILD)/overlay/packages/apps/Settings/res/values/strings.xml)
+
+ifneq ($(DEVICE_NEXUS_OVERLAY),)
+    DT_OFFICIAL := $(shell grep 'nexus_official_build">true<' $(DEVICE_NEXUS_OVERLAY) 2>/dev/null)
+    
+    ifneq ($(DT_OFFICIAL),)
+        NEXUS_DEVICES_XML := $(wildcard vendor/nexusOTA/devices.xml)
+        ifneq ($(NEXUS_DEVICES_XML),)
+            IS_OFFICIAL := $(shell grep '<device>$(LINEAGE_BUILD)</device>' $(NEXUS_DEVICES_XML) 2>/dev/null)
+            ifneq ($(IS_OFFICIAL),)
+                LINEAGE_BUILDTYPE := OFFICIAL
+            endif
+        endif
     endif
 endif
 
-# Filter out random types, so it'll reset to UNOFFICIAL
-ifeq ($(filter RELEASE NIGHTLY SNAPSHOT EXPERIMENTAL,$(LINEAGE_BUILDTYPE)),)
-    LINEAGE_BUILDTYPE := UNOFFICIAL
-    LINEAGE_EXTRAVERSION :=
-endif
-
-ifeq ($(LINEAGE_BUILDTYPE), UNOFFICIAL)
-    ifneq ($(TARGET_UNOFFICIAL_BUILD_ID),)
-        LINEAGE_EXTRAVERSION := -$(TARGET_UNOFFICIAL_BUILD_ID)
-    endif
-endif
-
-LINEAGE_VERSION_SUFFIX := $(LINEAGE_BUILD_DATE)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
+# Set version suffix
+LINEAGE_VERSION_SUFFIX := $(LINEAGE_BUILD_DATE)-$(LINEAGE_BUILDTYPE)-$(LINEAGE_BUILD)
 
 # Internal version
 LINEAGE_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(LINEAGE_VERSION_SUFFIX)
