@@ -5,12 +5,7 @@ $(call inherit-product-if-exists, vendor/extra/product.mk)
 -include $(sort $(wildcard vendor/*/*/exclude-bp.mk))
 
 # Pixel goodies
-$(call inherit-product, vendor/pixel/gms/products/gms.mk)
-$(call inherit-product, vendor/pixel/launcher/products/launcher.mk)
-$(call inherit-product, vendor/pixel/themepicker/products/themepicker.mk)
-$(call inherit-product, vendor/pixel/clocks/products/clocks.mk)
-$(call inherit-product, vendor/pixel/sounds/products/sounds.mk)
-$(call inherit-product, vendor/pixel/gsans/products/gsans.mk)
+$(call inherit-product, vendor/gms/products/gms.mk)
 
 DONT_DEXPREOPT_PREBUILTS := true
 
