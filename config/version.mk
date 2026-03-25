@@ -1,45 +1,65 @@
-PRODUCT_VERSION_MAJOR = 23
-PRODUCT_VERSION_MINOR = 0
+#
+# SPDX-FileCopyrightText: Paranoid Android
+# SPDX-License-Identifier: Apache-2.0
+#
 
-ifeq ($(LINEAGE_VERSION_APPEND_TIME_OF_DAY),true)
-    LINEAGE_BUILD_DATE := $(shell date -u +%Y%m%d_%H%M%S)
+#
+# Handle various build version information.
+#
+# Guarantees that the following are defined:
+#     AOSPA_MAJOR_VERSION
+#     AOSPA_MINOR_VERSION
+#     AOSPA_BUILD_VARIANT
+#
+
+# This is the global AOSPA version flavor that determines the focal point
+# behind our releases. This is bundled alongside $(AOSPA_MINOR_VERSION)
+# and only changes per major Android releases.
+AOSPA_MAJOR_VERSION := beryl
+
+# The version code is the upgradable portion during the cycle of
+# every major Android release. Each version code upgrade indicates
+# our own major release during each lifecycle.
+# It is based in three parts
+# X for SPL changes, Y for week, and Z for hotfix.
+ifdef AOSPA_BUILDVERSION
+    AOSPA_MINOR_VERSION := $(AOSPA_BUILDVERSION)
+endif
+
+# Build Variants
+#
+# Alpha: Development / Test releases
+# Beta: Public releases with CI
+# Stable: Final Product | No Tagging
+ifdef AOSPA_BUILDTYPE
+  ifeq ($(AOSPA_BUILDTYPE), ALPHA)
+      AOSPA_BUILD_VARIANT := alpha
+  else ifeq ($(AOSPA_BUILDTYPE), BETA)
+      AOSPA_BUILD_VARIANT := beta
+  else ifeq ($(AOSPA_BUILDTYPE), STABLE)
+      AOSPA_BUILD_VARIANT := stable
+  endif
 else
-    LINEAGE_BUILD_DATE := $(shell date -u +%Y%m%d)
+  AOSPA_BUILD_VARIANT := unofficial
 endif
 
-# Set LINEAGE_BUILDTYPE from the env RELEASE_TYPE, for jenkins compat
+# Build Date
+BUILD_DATE := $(shell date -u +%Y%m%d)
 
-ifndef LINEAGE_BUILDTYPE
-    ifdef RELEASE_TYPE
-        # Starting with "LINEAGE_" is optional
-        RELEASE_TYPE := $(shell echo $(RELEASE_TYPE) | sed -e 's|^LINEAGE_||g')
-        LINEAGE_BUILDTYPE := $(RELEASE_TYPE)
-    endif
+# AOSPA Version
+AOSPA_VERSION := $(AOSPA_MAJOR_VERSION)-
+AOSPA_DISPLAY_VERSION := $(shell V1=$(AOSPA_MAJOR_VERSION); echo -n $${V1^})
+
+ifeq ($(filter stable,$(AOSPA_BUILD_VARIANT)),)
+    AOSPA_VERSION += $(AOSPA_BUILD_VARIANT)-
+    AOSPA_DISPLAY_VERSION += $(shell V1=$(AOSPA_BUILD_VARIANT); echo -n $${V1^})
+else
+    AOSPA_VERSION += $(AOSPA_MINOR_VERSION)-
+    AOSPA_DISPLAY_VERSION += $(AOSPA_MINOR_VERSION)
 endif
 
-# Filter out random types, so it'll reset to UNOFFICIAL
-ifeq ($(filter RELEASE NIGHTLY SNAPSHOT EXPERIMENTAL,$(LINEAGE_BUILDTYPE)),)
-    LINEAGE_BUILDTYPE := UNOFFICIAL
-    LINEAGE_EXTRAVERSION :=
-endif
+# Add BUILD_DATE for zip naming
+AOSPA_VERSION += $(AOSPA_BUILD)-$(BUILD_DATE)
 
-ifeq ($(LINEAGE_BUILDTYPE), UNOFFICIAL)
-    ifneq ($(TARGET_UNOFFICIAL_BUILD_ID),)
-        LINEAGE_EXTRAVERSION := -$(TARGET_UNOFFICIAL_BUILD_ID)
-    endif
-endif
-
-LINEAGE_VERSION_SUFFIX := $(LINEAGE_BUILD_DATE)-$(LINEAGE_BUILDTYPE)$(LINEAGE_EXTRAVERSION)-$(LINEAGE_BUILD)
-
-# Internal version
-LINEAGE_VERSION := $(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(LINEAGE_VERSION_SUFFIX)
-
-# Display version
-LINEAGE_DISPLAY_VERSION := $(PRODUCT_VERSION_MAJOR)-$(LINEAGE_VERSION_SUFFIX)
-
-# LineageOS version properties
-PRODUCT_SYSTEM_PROPERTIES += \
-    ro.lineage.version=$(LINEAGE_VERSION) \
-    ro.lineage.display.version=$(LINEAGE_DISPLAY_VERSION) \
-    ro.lineage.build.version=$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR) \
-    ro.lineage.releasetype=$(LINEAGE_BUILDTYPE)
+# Remove unwanted characters for zip naming
+AOSPA_VERSION := $(shell echo -n $(AOSPA_VERSION) | tr -d '[:space:]')
